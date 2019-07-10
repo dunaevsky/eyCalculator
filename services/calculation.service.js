@@ -2,25 +2,29 @@ module.exports = {
   eyCalc, eyCalcComplex
 };
 
+/**
+ *
+ * @param operations - array of operations to invoke on elements
+ * @param elements - array of elements, should be size operation+1, works anyway
+ * @returns {*}
+ */
 function eyCalcComplex({operations, elements}) {
   let result = elements[0];
 
   for (let i=0; i< operations.length; i++){
     const currOperation = operations[i];
-    const currElements = [result, elements[i+1]];
+    const currElements = elements[i+1]? [result, elements[i+1]]: [result];
     result = eyCalc({operation: currOperation, elements: currElements});
   }
 
   return result;
 }
 
-// console.log(eyCalcComplex({operations:['multiply', 'divide'], elements: [1,2,120]}));
-
 /**
  *
  * @param operation - string to decide which calculation to use
  * @param elements array of numbers
- * @returns the operation chosen or err
+ * @returns string operation chosen or err
  */
 function eyCalc({operation, elements}) {
   switch (operation.toLowerCase()) {
@@ -54,7 +58,7 @@ function eyAdd(numbersArray) {
  */
 function eySub(numbersArray) {
   const initial = numbersArray[0];
-  const result = numbersArray.slice(1).reduce((acc, elem) => (substract(acc, elem)).toFixed(9), initial);
+  const result = numbersArray.slice(1).reduce((acc, elem) => (subtract(acc, elem)).toFixed(9), initial);
 
   if (isNaN(result)) {
     throw {err: 'there was an error in subtraction'};
@@ -100,7 +104,7 @@ function add(a, b) {
   return parseFloat(a) + parseFloat(b);
 }
 
-function substract(a, b) {
+function subtract(a, b) {
   return a - b;
 }
 

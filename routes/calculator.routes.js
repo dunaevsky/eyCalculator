@@ -5,11 +5,14 @@ module.exports = {
 };
 
 function handleCalcComplex(req, res) {
-  const { operations, elements } = req.body;
+  let { operations, elements } = req.body;
+  if (!operations || !elements) return res.sendStatus(422);
+  elements = filterNonNumbersFromAray(elements);
+
 
   try {
     const calculation = calculationService.eyCalcComplex({operations, elements});
-    res.send(calculation);
+    res.send({result: calculation});
   } catch (e) {
     e.statusCode ? res.sendStatus(e.statusCode) : res.sendStatus(500);
   }
@@ -22,7 +25,7 @@ async function handleCalc(req, res) {
 
   try {
     const calculation = calculationService.eyCalc({operation, elements});
-    res.send(calculation);
+    res.send({result: calculation});
   } catch (e) {
     e.statusCode ? res.sendStatus(e.statusCode) : res.sendStatus(500);
   }
@@ -35,10 +38,14 @@ function getCalcParamsFromBody(body) {
   if (!elements || !operation) return null;
   if (!Array.isArray(elements)) return null;
 
-  // filters out non numbers
-  elements = elements.map((elem) => parseFloat(elem)).filter((elem) => {
-    return Boolean(elem) || elem < Number.EPSILON;
-  });
+  elements = filterNonNumbersFromAray(elements);
 
   return {elements, operation};
+}
+
+
+function filterNonNumbersFromAray(array) {
+  return array.map((elem) => parseFloat(elem)).filter((elem) => {
+    return Boolean(elem) || elem < Number.EPSILON;
+  });
 }
