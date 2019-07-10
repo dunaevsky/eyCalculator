@@ -11,5 +11,6 @@ module.exports = (app) => {
     calculatorRouter.use(bodyParser.json());
 
     calculatorRouter.post('/calculate', calculatorRoutes.handleCalc);
+    calculatorRouter.post('/calculateComplex', calculatorRoutes.handleCalcComplex);
     app.use('/calculator', calculatorRouter);
 };

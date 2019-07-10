@@ -1,8 +1,19 @@
 const calculationService = require('../services/calculation.service');
 
 module.exports = {
-  handleCalc,
+  handleCalc, handleCalcComplex
 };
+
+function handleCalcComplex(req, res) {
+  const { operations, elements } = req.body;
+
+  try {
+    const calculation = calculationService.eyCalcComplex({operations, elements});
+    res.send(calculation);
+  } catch (e) {
+    e.statusCode ? res.sendStatus(e.statusCode) : res.sendStatus(500);
+  }
+}
 
 async function handleCalc(req, res) {
   const params = getCalcParamsFromBody(req.body);
